@@ -3,12 +3,13 @@ Compatibility=1.1 or later
 Compiled file=Manual de clase.chm
 Contents file=Tabla de Contenidos.hhc
 Default Window=Mi aplicación
+Default topic=presentacion.htm
 Display compile progress=No
 Index file=indice.hhk
 Language=0xc0a Español (España, internacional)
 
 [WINDOWS]
-Mi aplicación="App Butaquet","Tabla de Contenidos.hhc","indice.hhk",,,,,,,0x3520,,0x3006,,,,,,,,0
+Mi aplicación="Juego Cifras y Letras","Tabla de Contenidos.hhc","indice.hhk",,,,,,,0x3520,,0x3006,,,,,,,,0
 
 
 [FILES]

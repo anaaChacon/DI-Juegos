@@ -635,7 +635,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		
 		if(e.getSource() == menuContenedor3){
 			try {
-				Runtime.getRuntime().exec("hh.exe Manual de Clase/Manual de Clase.chm");
+				Runtime.getRuntime().exec("hh.exe Manual de Clase/Manual de Clase.chm");//C:/Users/dam2/Desktop/
 				} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

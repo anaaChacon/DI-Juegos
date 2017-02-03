@@ -34,7 +34,7 @@ public class Reloj extends JPanel {
     private DecimalFormat timeFormatter;
 
     private Timer timer;
-    private boolean parado = false;
+     boolean parado = false;
 
     public boolean isParado() {
 		return parado;
@@ -74,11 +74,13 @@ public class Reloj extends JPanel {
                 } else {
                     if (seconds == 0 && minutes == 0) {
                     	
+                    	
                     	timer.stop();
-                        parado = true;
+                        
                         
                     	if(centiseconds == 0){
-                    		JOptionPane.showMessageDialog(null, "Su puntuación ha sido: ", "Tiempo", JOptionPane.INFORMATION_MESSAGE);	
+                    		JOptionPane.showMessageDialog(null, "        Fin del tiempo", "Tiempo", JOptionPane.INFORMATION_MESSAGE);	
+                    		parado = true;
                     	}
                         
                     } else if (seconds > 0) {

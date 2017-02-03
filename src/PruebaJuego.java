@@ -44,20 +44,20 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 	
 	private JMenuBar menu;
 	private JMenu menuInterior;
-	private JMenuItem menuContenedor1, menuContenedor2;
+	private JMenuItem menuContenedor1, menuContenedor2, menuContenedor3;
 	private JTabbedPane tabPane;
 	private int numRandon, numAleatorio;
 	private int posicion, posicionNumero;
 	private JTextField letra1, campoNumerico;
 	private JButton letraNueva, letraNueva2, botonVocales, botonConsonante;
 
-	JButton botonVerificar;
+	static JButton botonVerificar;
 
-	private JButton botonReordenar;  
+	private JButton botonReordenar, botonPlay;  
 
-	private JButton miboton;
+	private static JButton miboton;
 
-	private JButton miboton2;
+	private static JButton miboton2;
 
 	private JButton nuevoBoton;
 
@@ -65,7 +65,9 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 	private JButton numero, botonIgual, suma, resta, div, multi, borrarTodo, borrarNumero, miboton3;
 	private String [] vocales;
 	private String [] consonantes;
-	private JPanel letras, panelCifras4;
+	private static JPanel letras;
+
+	private JPanel panelCifras4;
 	private JComboBox<String> comboLista; 
 	private String anyadir;
 	private ArrayList<String> arrayList;
@@ -80,6 +82,10 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 	private File cargafichero;
 	JScrollPane scroll2;
 	JPanel botonesLetras;
+	
+	private int contadorLetras, contLetras, sumaLetras, puntuacion2;
+
+	private static int cantidadLetras;
 	
 	public JPanel getBotonesLetras() {
 		return botonesLetras;
@@ -105,6 +111,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			BufferedReader lectura = new BufferedReader(lecturaFichero);
 			String linea;
 			anyadir = letra1.getText().toString();
+			cantidadLetras = anyadir.length();
 			
 			//comprobar = true;
 			numeroClicado = 2;
@@ -121,14 +128,17 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			switch(numeroClicado){
 			
 			case 1:
-				JOptionPane.showMessageDialog(null, "Se ha añadido a la lista: " + anyadir, "Añadir a lista", JOptionPane.INFORMATION_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Se ha añadido a la lista: " + anyadir + "\n   Puntuación: " + cantidadLetras, "Añadir a lista", JOptionPane.INFORMATION_MESSAGE);
 				comboLista.addItem(anyadir);
+				
 				
 			break;
 			
 			default:
-				JOptionPane.showMessageDialog(null, "La palabra (" + anyadir + ") no existe.", "Añadir a lista", JOptionPane.ERROR_MESSAGE);
-			break;
+				cantidadLetras = 0;
+				JOptionPane.showMessageDialog(null, "La palabra (" + anyadir + ") no existe."+ "\n   Puntuación: " + cantidadLetras, "Añadir a lista", JOptionPane.ERROR_MESSAGE);
+				
+				break;
 			}
 			
 			
@@ -141,6 +151,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			ex.printStackTrace();
 			//JOptionPane.showMessageDialog(this, "No se puede encontrar el fichero", "Error", JOptionPane.ERROR_MESSAGE);
 		}
+		botonVerificar.setEnabled(false);
 	}
 
 	public PruebaJuego(){
@@ -157,19 +168,21 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		arrayList1 = new ArrayList<>();
 		cargafichero = new File("palabrasAnyadidas.txt");
 		
+		
 		menu = new JMenuBar();
 		menuInterior = new JMenu("Inicio");
-		menuContenedor1 = new JMenuItem("Deshacer",KeyEvent.VK_Z);
+		menuContenedor1 = new JMenuItem("Resultado");
 		menuContenedor2 = new JMenuItem("Salir");
+		menuContenedor3 = new JMenuItem("Ayuda");
 		
-		menuContenedor1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Z, ActionEvent.CTRL_MASK));
-		menuContenedor1.setMnemonic(KeyEvent.VK_Z);
 		menuContenedor1.addActionListener(this);
+		menuContenedor2.addActionListener(this);
+		menuContenedor3.addActionListener(this);
 		
 		menuInterior.add(menuContenedor1);
-	
 		menuInterior.add(menuContenedor2);
-		menuContenedor2.addActionListener(this);
+		menuInterior.add(menuContenedor3);
+		
 		
 		menu.add(menuInterior);
 		
@@ -265,7 +278,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		botonRevobinar.setRolloverEnabled(true);
 		
 		resetear.add(botonReordenar);
-		resetear.add(botonRevobinar);
+		resetear.add(botonRevobinar); 
 		
 		JPanel lista = new JPanel();
 		lista.setBackground(Color.decode("#404040"));
@@ -310,7 +323,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		tiempo.setPreferredSize(new Dimension(300,100));
 		//tiempo.setVisible(true);
 		
-		tiempo.getTimer().start();
+		tiempo.getTimer().stop(); 
 		palabra.add(tiempo);
 		palabra.add(letra1);
 		palabra.add(botonVerificar); 
@@ -350,7 +363,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		
 		JPanel panelCifras2 = new JPanel();
 		panelCifras2.setBackground(Color.decode("#404040"));
-		//panelCifras2.setLayout(new GridLayout(1,2));
+		panelCifras2.setLayout(new FlowLayout());
 		numAleatorio = (int)Math.round(Math.random()* (999 - 101 +1) + 101);
 	
 		
@@ -360,7 +373,25 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		etiquetaNumero.setForeground(Color.decode("#FDFEFE"));
 		etiquetaNumero.setHorizontalAlignment(JLabel.CENTER);
 		
-		 
+		ImageIcon iconP = new ImageIcon("./src/imagenes/play.png");
+		Image imgP = iconP.getImage();
+		Image otraP = imgP.getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+		ImageIcon iconPlay = new ImageIcon(otraP);
+		botonPlay = new JButton();
+		botonPlay.setIcon(iconPlay);
+		
+		botonPlay.setBorderPainted(false);
+		botonPlay.setContentAreaFilled(false);
+		botonPlay.setFocusable(false);
+		botonPlay.setRolloverEnabled(true);
+		
+		botonPlay.addActionListener(this);
+		botonPlay.setBackground(Color.gray);
+		
+		botonPlay.setFocusable(false);
+		botonPlay.setRolloverEnabled(true);
+		
+		panelCifras2.add(botonPlay); 
 		panelCifras2.add(etiquetaNumero);
 		
 		JPanel panelCifras3 = new JPanel();
@@ -456,7 +487,6 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		suma.addActionListener(this);
 		suma.setActionCommand(posicionNumero++ +"");
 	
-		
 		resta = new JButton("-");
 		resta.setBackground(Color.decode("#000000"));
 		resta.setForeground(Color.WHITE);	
@@ -478,35 +508,17 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		div.addActionListener(this);
 		div.setActionCommand(posicionNumero++ +"");
 		
-		/*parentesisAbierto = new JButton("(");
-		parentesisAbierto.setBackground(Color.decode("#000000"));
-		parentesisAbierto.setForeground(Color.WHITE);	
-		parentesisAbierto.setFont(new Font("Calibri", 1, 42));
-		parentesisAbierto.addActionListener(this);
-		//parentesisAbierto.setActionCommand(posicionNumero++ +"");
-		
-		parentesisCerrado = new JButton(")");
-		parentesisCerrado.setBackground(Color.decode("#000000"));
-		parentesisCerrado.setForeground(Color.WHITE);	
-		parentesisCerrado.setFont(new Font("Calibri", 1, 42));
-		parentesisCerrado.addActionListener(this);
-		//parentesisCerrado.setActionCommand(posicionNumero++ +"");
-		*/
 		borrarTodo = new JButton("C");
 		borrarTodo.setBackground(Color.decode("#000000"));
 		borrarTodo.setForeground(Color.WHITE);	
 		borrarTodo.setFont(new Font("Calibri", 1, 40));
 		borrarTodo.addActionListener(this);
 		
-		
 		//Función de deshacer
 		borrarNumero = new JButton();
 		borrarNumero.setBackground(Color.decode("#000000"));
-		//borrarNumero.setForeground(Color.WHITE);	
-		//borrarNumero.setFont(new Font("Calibri", 1, 42));
 		borrarNumero.addActionListener(this);
-		//borrarNumero.setActionCommand(posicionBorrar++ +"");
-		
+	
 		ImageIcon iconoBor = new ImageIcon("./src/imagenes/borrarNumero.png");
 		Image imgBorrar = iconoBor.getImage();
 		Image otraimgBor = imgBorrar.getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -565,6 +577,9 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 				
+		if(e.getSource() == botonPlay){
+			time.getTimer().start();
+		}
 		
 		if(e.getSource() == botonRevobinar){
 			
@@ -618,6 +633,15 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			
 		}
 		
+		if(e.getSource() == menuContenedor3){
+			try {
+				Runtime.getRuntime().exec("hh.exe Manual de Clase/Manual de Clase.chm");
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				}
+		}
+		
 		//Comparamos los botones según la posición para poder hacer clic en cualquiera de uno de ellos t mostrarlos en el JTextField
 		for(int i=0;i<posicion;i++) 
 		{
@@ -630,7 +654,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			        String cadena = letra1.getText();
 					cadena = cadena + miboton.getText().toString();
 					letra1.setText(cadena);
-					
+					contadorLetras = i;
 				
 					miboton.setVisible(false);
 					//Obtenemos la letra del boton y la añadimos a la lista
@@ -648,14 +672,17 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			        String cadena = letra1.getText();
 					cadena = cadena + miboton2.getText().toString();
 					letra1.setText(cadena);
-					
+					contLetras = i;
 					miboton2.setVisible(false);
 					//Obtenemos la letra del boton y la añadimos a la lista
 					
 					arrayList.add(miboton2.getText().toString());
 					
 			}
+			/****************************suuu**************/
+			
 		}
+		
 			for(int j=0;j<posicionNumero;j++) 
 			{
 				//Boton para vocales
@@ -669,7 +696,6 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 						campoNumerico.setText(miboton3.getText().toString());
 						
 						miboton3.setEnabled(false);
-						//miboton3.setActionCommand(numeroClicado++ +"clic");
 						
 						suma.setEnabled(true);
 						resta.setEnabled(true);
@@ -678,37 +704,12 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 						borrarTodo.setEnabled(true);
 						borrarNumero.setEnabled(true);
 						
-						time.getTimer().restart();
+						
 						
 				}	
 				
 			}
 			
-			/*for(int h=0;h<numeroClicado;h++) 
-			{
-				//Boton para vocales
-				if(e.getActionCommand().equals(h+"clic"))
-				{
-					  
-						miboton4 = new JButton();
-						miboton4 = (JButton)e.getSource();
-				      
-						//campoNumerico.setText(miboton3.getText().toString());
-						
-						//miboton4.setEnabled(true);
-						//miboton3.setActionCommand(numeroClicado++ +"clic");
-						
-						suma.setEnabled(true);
-						resta.setEnabled(true);
-						div.setEnabled(true);
-						multi.setEnabled(true);
-						borrarTodo.setEnabled(true);
-						borrarNumero.setEnabled(true);
-						
-						
-				}	
-				
-				}*/
 		
 		
 		if(e.getSource() == botonVocales){
@@ -725,7 +726,7 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 				
 				letraNueva.setPreferredSize(new Dimension(60,60));
 				letraNueva.setFont(new Font("Calibri", 1, 22));
-				
+				contLetras++;
 			
 				
 			}
@@ -746,28 +747,27 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 				
 				letraNueva2.setPreferredSize(new Dimension(60,60));
 				letraNueva2.setFont(new Font("Calibri", 1, 22));
-				
+				contadorLetras++;
 			
 			}
 			
 		}
-		
-	//	if(e.getSource() == comboLista){
+		sumaLetras = contadorLetras + contLetras;
+		if(sumaLetras == 9){
+			botonVocales.setEnabled(false);
+			botonConsonante.setEnabled(false);
+			tiempo.getTimer().start();
 			
-		//}
+			
+		}
+	
 		
 		if(e.getSource() == botonVerificar){
 			//Nos falta aqui comprobar si a palabra es valida o no
 			//
 			if(!letra1.getText().toString().isEmpty()){
 				
-				//Comprobar si la palabra ya se ha añadido o no (falta porque esto no va bien)
-				/*for(int i = 0; i<arrayList1.size(); i++){
-					if(!letra1.getText().toString().equals(arrayList1.get(i))){ 
-						JOptionPane.showMessageDialog(this, "Esta palabra ya ha sido añadida.", "Advertencia", JOptionPane.WARNING_MESSAGE);
-					}
-					System.out.print(arrayList1.get(i));
-				}*/
+				//puntuacion = 0;
 				
 				String existente = "";
 				try {
@@ -820,35 +820,11 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 		}
 		
 		if(e.getSource() == botonReordenar){
+			
 			PruebaJuego.this.setVisible(false);
 			PruebaJuego.this.dispose();
 			new PruebaJuego();
-			
-			//System.exit(0);
-			/*arrayList.clear();
-			
-			letra1.setText("");
-			
-			//comboLista.addItem("Seleccione la palabra... ");
-			//Eliminamos el contenido del panel y lo volvemos a repintar
-			letras.removeAll();
-			letras.repaint();
-				
-			
-				
-			JOptionPane.showMessageDialog(this, "    ¡Empezamos de nuevo!", "Nueva Partida", JOptionPane.INFORMATION_MESSAGE);
-			
-				arrayList1.clear();
-				comboLista.removeAllItems();
-				comboLista.addItem("Seleccione la palabra...");
-				
-				cargafichero.delete();
-				try {
-					cargafichero.createNewFile();
-				} catch (IOException ioe) {
-				  ioe.printStackTrace();
-				}*/
-		
+					
 		}
 			
 		if(e.getSource() == borrarTodo){
@@ -865,42 +841,34 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 			
 		}
 		
-		
 		if(e.getSource() == suma){
 			num1 = Integer.parseInt(campoNumerico.getText());
 			operacion = 1;//asignamos a este boton un número(de operacion)
 			campoNumerico.setText(suma.getText().toString());
-			//campoNumerico.setText("");
 			
 		}
 		if(e.getSource() == resta){
 			num1 = Integer.parseInt(campoNumerico.getText());
 			operacion = 2;
 			campoNumerico.setText(resta.getText().toString());
-			//campoNumerico.setText("");
 			
 		}
 		if(e.getSource() == div){
 			num1 = Integer.parseInt(campoNumerico.getText());
 			operacion = 3;
 			campoNumerico.setText(div.getText().toString());
-			//campoNumerico.setText("");
 			
 		}
 		if(e.getSource() == multi){
 			num1 = Integer.parseInt(campoNumerico.getText());
 			operacion = 4;
 			campoNumerico.setText(multi.getText().toString());
-			//campoNumerico.setText("");
 			
 		}
 		
 		if(e.getSource() == botonIgual){
-			//campoNumerico.setText("");
 					
-			
-			if(!campoNumerico.getText().toString().isEmpty()){
-					
+			if(!campoNumerico.getText().toString().isEmpty()){	
 				num2 = Integer.parseInt(campoNumerico.getText());//obtenemos el segundo numero que hemos presionado
 			//Hacemos uso del switch case para saber que operacion estamos realizando
 			switch(operacion)
@@ -924,20 +892,22 @@ public class PruebaJuego extends JFrame implements  ActionListener, ItemListener
 						
 		
 			if(resultadoFinal == numAleatorio){
-				
+				puntuacion2 = 100;
 				resultado.setText("CORRECTO");
+				JOptionPane.showMessageDialog(null, "    Puntuación: " + puntuacion2, "Puntuación", JOptionPane.INFORMATION_MESSAGE);
 				resultado.setForeground(Color.green);
 				for(int i = 0; i < arrayBotones.size(); i++){
 					arrayBotones.get(i).setEnabled(false);
 				}
-				
 			}
 			else{
-				//resultado.setText("INCORRECTO");
-				//resultado.setForeground(Color.red);
+				puntuacion2 = 0;
 			}
-			//resultado.setText(String.valueOf(resultadoFinal));
-			
+		}
+		
+		if(e.getSource() == menuContenedor1){
+			int puntuacionTotal = cantidadLetras + puntuacion2;
+			JOptionPane.showMessageDialog(null, "    Puntuación total: " + puntuacionTotal, "Resultado", JOptionPane.INFORMATION_MESSAGE);
 		}
 		
 	}
